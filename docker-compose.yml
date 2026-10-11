@@ -1,0 +1,30 @@
+# Lodě (Battleship) na VPS – https://lode.pdostalek.cz
+#   game - Node.js server hry (Express + Socket.io), ghcr.io/hackatoan/battleship
+# Veřejné HTTPS obstarává sdílený Caddy z /opt/audiobookshelf podle
+# caddy/lode.caddy (viz NAVOD.md). Tento projekt žádné veřejné porty nemá,
+# kontejner je dosažitelný jen ze sdílené docker sítě "web".
+services:
+  game:
+    image: ghcr.io/hackatoan/battleship:latest
+    container_name: lode          # pod tímto jménem ho najde sdílený Caddy
+    restart: unless-stopped
+    environment:
+      - PORT=3025
+      # Žebříček (leaderboard) vyžaduje Postgres přes DATABASE_URL; bez něj
+      # hra běží normálně, jen bez žebříčku. Pro hru s kamarády netřeba.
+      # - DATABASE_URL=postgresql://user:pass@host:5432/db
+    # image nemá USER -> běžel by jako root; nobody stačí, server jen čte /app
+    user: "65534:65534"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    pids_limit: 128
+    networks:
+      - web
+
+networks:
+  web:
+    external: true            # vytváří ji update-server.sh audiobookshelfu

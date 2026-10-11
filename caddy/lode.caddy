@@ -1,0 +1,17 @@
+# Patří do /etc/caddy/sites.d/ na VPS – načte ho sdílený Caddy z
+# /opt/audiobookshelf (import /etc/caddy/sites.d/*.caddy). HTTPS pro doménu
+# a přeposlání na kontejner lode v síti "web". Socket.io (WebSocket) běží na
+# stejném portu jako HTTP, Caddy upgrade spojení přeposílá sám.
+lode.pdostalek.cz {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+
+	reverse_proxy lode:3025
+}
