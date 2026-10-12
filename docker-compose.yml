@@ -1,6 +1,7 @@
 # Lodě (Battleship) na VPS – https://lode.pdostalek.cz
 #   game - Node.js server hry (Express + Socket.io), ghcr.io/dospe/battleship
-#          = fork Hackatoan/battleship s PWA a bez analytiky autora
+#          = český fork Hackatoan/battleship s vlastním UI a PWA, bez
+#            žebříčku, přihlášení a analytiky autora
 # Veřejné HTTPS obstarává sdílený Caddy z /opt/audiobookshelf podle
 # caddy/lode.caddy (viz NAVOD.md). Tento projekt žádné veřejné porty nemá,
 # kontejner je dosažitelný jen ze sdílené docker sítě "web".
@@ -11,9 +12,6 @@ services:
     restart: unless-stopped
     environment:
       - PORT=3025
-      # Žebříček (leaderboard) vyžaduje Postgres přes DATABASE_URL; bez něj
-      # hra běží normálně, jen bez žebříčku. Pro hru s kamarády netřeba.
-      # - DATABASE_URL=postgresql://user:pass@host:5432/db
     # image nemá USER -> běžel by jako root; nobody stačí, server jen čte /app
     user: "65534:65534"
     read_only: true
