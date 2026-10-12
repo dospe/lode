@@ -10,3 +10,6 @@ game.js).
 - `navrh-B.png` – „Radar“ (zelený terminál, kódy uprostřed polí, bez vnějších popisků)
 - `navrh-C.png` – „Papír“ (světlá, tužka a papír)
 - `mock.html` – zdroj mockupů; otevřít v prohlížeči s `?v=A|B|C&screen=game|menu`
+
+**Zvoleno:** A jako tmavý režim + C jako světlý režim, přepínatelné tlačítkem
+vpravo nahoře. Implementováno ve forku `dospe/battleship`, větev `ui-cz`.

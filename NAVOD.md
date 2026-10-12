@@ -5,9 +5,12 @@ sdílený odkaz na místnost. Bez účtů; dá se nainstalovat jako aplikace (PW
 a hra proti počítači jde i offline. Zdroj: náš fork
 [dospe/battleship](https://github.com/dospe/battleship) projektu
 [Hackatoan/battleship](https://github.com/Hackatoan/battleship) (Node.js +
-Express + Socket.io). Fork přidává PWA (manifest, service worker, ikony
-„Lodě“) a odebírá Cloudflare Web Analytics autora; image staví GitHub Actions
-do `ghcr.io/dospe/battleship`.
+Express + Socket.io). Fork má české rozhraní, vlastní čistý vzhled (tmavý
+„Námořní“ a světlý „Papír“, přepínač vpravo nahoře), kódy polí na pozadí
+mřížky a potopené lodě vlastní barvou; přidává PWA (manifest, service worker,
+ikony „Lodě“) a odebírá patičku s odkazy, SEO text, žebříček, Google
+přihlášení i analytiku autora. Image staví GitHub Actions do
+`ghcr.io/dospe/battleship`.
 
 Stejný model jako radar: porty 80/443 drží Caddy audiobookshelfu
 (`/opt/audiobookshelf`). Hra nemá vlastní veřejný port, jen položí
@@ -91,17 +94,12 @@ se načítají vždy nejdřív ze sítě, skripty/styly z cache s aktualizací n
 pozadí (nová verze se projeví při dalším otevření). Když se ve forku změní
 seznam souborů v `PRECACHE` v `public/sw.js`, zvyš tam i `VERSION`.
 
-## Žebříček (volitelné)
-Hra umí sdílený žebříček přes Postgres (`DATABASE_URL`). Bez něj běží
-normálně, jen bez žebříčku – pro hru s kamarády zbytečné. Přihlášení přes
-Google v menu hry míří na Firebase projekt autora, u nás nic nedělá; dá se
-ignorovat.
-
 ## Aktualizace
-Novinky z upstreamu se dostanou do forku tlačítkem **Sync fork** na GitHubu
-(stránka forku); push do `main` spustí Actions a ty postaví nový image.
-Konflikt může nastat jen v `index.html` (bloky `pwa:start`/`pwa:end` a
-odebraný řádek Cloudflare) – při řešení je zachovej.
+Push do `main` forku spustí Actions a ty postaví nový image. Fork se od
+upstreamu výrazně liší (vlastní `index.html`, `style.css`, přepsaný
+`game.js` a `server.js`, odstraněné jazyky a žebříček), takže **Sync fork**
+na GitHubu skončí konflikty – případné opravy herní logiky z upstreamu je
+třeba přenést ručně (typicky jen `game.js` / `server.js`).
 
 Na VPS stejný cron jako radar, jen jiná složka:
 ```
@@ -118,6 +116,6 @@ proto neděle ve 4:40.
 - HTTPS (Let's Encrypt, sdílený Caddy), HSTS, nosniff, bez rámování.
 - Hra nemá účty ani heslo; místnost zná jen ten, kdo dostal odkaz. Server
   drží jen stav partií v paměti, nic neukládá na disk.
-- Bez `DATABASE_URL` neodchází z VPS žádná data. Analytika autora
-  (Cloudflare Web Analytics) je ve forku odebraná; prohlížeč hráče ale dál
-  načítá Firebase SDK z gstatic.com (Google přihlášení autora).
+- Žádná data neodcházejí třetím stranám: žebříček (Postgres), Google
+  přihlášení (Firebase SDK z gstatic.com) i analytika autora jsou z forku
+  odstraněné. Prohlížeč hráče načítá jen soubory z `lode.pdostalek.cz`.
